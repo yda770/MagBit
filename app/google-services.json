@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "139217641888",
+    "firebase_url": "https://magbit-e387a.firebaseio.com",
+    "project_id": "magbit-e387a",
+    "storage_bucket": "magbit-e387a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139217641888:android:1501994d532e0c1c",
+        "android_client_info": {
+          "package_name": "com.example.yehuda_da.magbit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "139217641888-4rpa7enqg5br3tce553o6r57emnpmr40.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yehuda_da.magbit",
+            "certificate_hash": "0fd99008e9d210e81b3d6b376a83b3cf1abfc07c"
+          }
+        },
+        {
+          "client_id": "139217641888-ja3vjfttbsk9klg9fj3jc2p8pmsc5atc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc83nv3rP3xS0OJbHEJHiCoxxY7W4bi60"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "139217641888-ja3vjfttbsk9klg9fj3jc2p8pmsc5atc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
