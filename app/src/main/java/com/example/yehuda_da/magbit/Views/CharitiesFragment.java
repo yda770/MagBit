@@ -1,4 +1,4 @@
-package com.example.yehuda_da.magbit;
+package com.example.yehuda_da.magbit.Views;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.yehuda_da.magbit.MyCharitiesRecyclerViewAdapter;
+import com.example.yehuda_da.magbit.R;
 import com.example.yehuda_da.magbit.dummy.DummyContent;
 import com.example.yehuda_da.magbit.dummy.DummyContent.DummyItem;
-
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.

@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "139217641888-vc0tssso6dl82ckk18cuj8oh913iq46f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yehuda_da.magbit",
+            "certificate_hash": "a7252276064173e00fb18eb6d196231f7a0f0026"
+          }
+        },
+        {
           "client_id": "139217641888-ja3vjfttbsk9klg9fj3jc2p8pmsc5atc.apps.googleusercontent.com",
           "client_type": 3
         }

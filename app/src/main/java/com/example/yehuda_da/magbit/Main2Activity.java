@@ -3,6 +3,8 @@ package com.example.yehuda_da.magbit;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,13 +19,23 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.yehuda_da.magbit.Views.CharitiesFragment;
 import com.example.yehuda_da.magbit.dummy.DummyContent;
+import com.example.yehuda_da.magbit.models.Magbit;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Main2Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, Login_fragment.LoginFragmentListener, CharitiesFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, Login_fragment.LoginFragmentListener, MaibItitemFragment.OnListFragmentInteractionListener {
     private Menu navMenu;
+    RecyclerView RecyclerViewMagbir;
+    MyMaibItitemRecyclerViewAdapter MagbitAdapter;
+
+    public void onListFragmentInteraction(Magbit item)
+    {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,14 +43,14 @@ public class Main2Activity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -56,8 +68,20 @@ public class Main2Activity extends AppCompatActivity
                     .replace(R.id.content, Login_fragment.newInstance())
                     .commit();
         } else {
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content, MaibItitemFragment.newInstance())
+                    .commit();
+            showUser(FirebaseAuth.getInstance().getCurrentUser());
+
         }
     }
+
+    private void startMaigbitList() {
+
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -144,8 +168,7 @@ public class Main2Activity extends AppCompatActivity
                 .load(currentUser.getPhotoUrl())
                 .apply(RequestOptions.circleCropTransform())
                 .into(userImage);
-    }
 
-    public void onListFragmentInteraction(DummyContent.DummyItem item){
+
     }
 }

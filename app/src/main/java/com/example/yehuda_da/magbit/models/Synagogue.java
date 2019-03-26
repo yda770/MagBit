@@ -7,7 +7,7 @@ import java.util.List;
 public class Synagogue {
     private int Id;
     private String Name;
-    private Image Imeg;
+    private String Image;
     private String Address;
     private List<Prayer> Prayers;
 
@@ -24,12 +24,12 @@ public class Synagogue {
         Name = name;
     }
 
-    public Image getImeg() {
-        return Imeg;
+    public String getImeg() {
+        return Image;
     }
 
-    public void setImeg(Image imeg) {
-        Imeg = imeg;
+    public void setImeg(String imeg) {
+        Image = imeg;
     }
 
     public String getAddress() {
@@ -48,11 +48,11 @@ public class Synagogue {
         Prayers = prayers;
     }
 
-    public Synagogue(String name, Image imeg, String address) {
+    public Synagogue(String name, Image Image, String address) {
        // FirebaseDatabase database = FirebaseDatabase.getInstance();
         //Id = String key = database.getReference("quiz").push().getKey();;
         Name = name;
-        Imeg = imeg;
+        Image = Image;
         Address = address;
     }
 }
