@@ -1,4 +1,4 @@
-package com.example.yehuda_da.magbit.Views;
+package com.example.yehuda_da.magbit.models;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,10 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.yehuda_da.magbit.MyCharitiesRecyclerViewAdapter;
 import com.example.yehuda_da.magbit.R;
-import com.example.yehuda_da.magbit.dummy.DummyContent;
-import com.example.yehuda_da.magbit.dummy.DummyContent.DummyItem;
+import com.example.yehuda_da.magbit.models.dummy.DummyContent;
+import com.example.yehuda_da.magbit.models.dummy.DummyContent.DummyItem;
+
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -21,7 +22,7 @@ import com.example.yehuda_da.magbit.dummy.DummyContent.DummyItem;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class CharitiesFragment extends Fragment {
+public class charity_item_Fragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -33,13 +34,13 @@ public class CharitiesFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public CharitiesFragment() {
+    public charity_item_Fragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static CharitiesFragment newInstance(int columnCount) {
-        CharitiesFragment fragment = new CharitiesFragment();
+    public static charity_item_Fragment newInstance(int columnCount) {
+        charity_item_Fragment fragment = new charity_item_Fragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -58,7 +59,7 @@ public class CharitiesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_charities_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_charity_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -69,7 +70,7 @@ public class CharitiesFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyCharitiesRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new MyCharityRecyclerViewAdapter(DummyContent.ITEMS, mListener));
         }
         return view;
     }
@@ -106,5 +107,4 @@ public class CharitiesFragment extends Fragment {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
     }
-
 }

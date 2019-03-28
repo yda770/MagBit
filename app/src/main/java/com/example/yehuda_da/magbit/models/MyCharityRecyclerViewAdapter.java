@@ -1,4 +1,4 @@
-package com.example.yehuda_da.magbit;
+package com.example.yehuda_da.magbit.models;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,8 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.yehuda_da.magbit.Views.CharitiesFragment.OnListFragmentInteractionListener;
-import com.example.yehuda_da.magbit.dummy.DummyContent.DummyItem;
+import com.example.yehuda_da.magbit.R;
+import com.example.yehuda_da.magbit.models.charity_item_Fragment.OnListFragmentInteractionListener;
+import com.example.yehuda_da.magbit.models.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
@@ -16,12 +17,12 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyCharitiesRecyclerViewAdapter extends RecyclerView.Adapter<MyCharitiesRecyclerViewAdapter.ViewHolder> {
+public class MyCharityRecyclerViewAdapter extends RecyclerView.Adapter<MyCharityRecyclerViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyCharitiesRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MyCharityRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -29,7 +30,7 @@ public class MyCharitiesRecyclerViewAdapter extends RecyclerView.Adapter<MyChari
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_charities, parent, false);
+                .inflate(R.layout.fragment_charity_item, parent, false);
         return new ViewHolder(view);
     }
 
