@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.MediaActionSound;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,6 +59,28 @@ public class MaibItitemFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        FloatingActionButton fab =  getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.content, MabitFragment.newInstance())
+                        .addToBackStack(MabitFragment.class.getSimpleName())
+                        .commit();
+
+                        FloatingActionButton fab =  getActivity().findViewById(R.id.fab);
+                        fab.setVisibility(View.INVISIBLE);
+
+            }
+        });
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -68,6 +92,8 @@ public class MaibItitemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         View view = inflater.inflate(R.layout.fragment_maibititem_list, container, false);
 
         // Set the adapter
@@ -91,7 +117,12 @@ public class MaibItitemFragment extends Fragment {
                         Magbit magbit = magbitdata.getValue(Magbit.class);
                         MagbitList.add(magbit);
                     }
+
+                    LinearLayoutManager llm = new LinearLayoutManager(getContext());
+                    llm.setOrientation(LinearLayoutManager.VERTICAL);
+                    recyclerView.setLayoutManager(llm);
                     recyclerView.setAdapter(new MyMaibItitemRecyclerViewAdapter(MagbitList, mListener));
+
                 }
 
                 @Override
@@ -100,7 +131,10 @@ public class MaibItitemFragment extends Fragment {
                 }
             });
         }
+
         return view;
+
+
     }
 
     @Override

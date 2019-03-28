@@ -45,7 +45,7 @@ public class MyMaibItitemRecyclerViewAdapter extends RecyclerView.Adapter<MyMaib
         holder.mIdView.setText(mValues.get(position).getId());
         holder.mMagbitName.setText(mValues.get(position).getName());
         holder.mMagbitDesc.setText(mValues.get(position).getDescription());
-//        holder.mMagbitImage.setImageBitmap(mValues.get(position).getImage());
+        holder.mMagbitImage.setImageBitmap(mValues.get(position).getImage());
 
 
 //        Glide.with(holder.mMagbitImage.getContext())
