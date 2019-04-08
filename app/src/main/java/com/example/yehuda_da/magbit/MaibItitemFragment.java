@@ -1,10 +1,13 @@
 package com.example.yehuda_da.magbit;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.media.MediaActionSound;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,7 +20,9 @@ import android.view.ViewGroup;
 import com.example.yehuda_da.magbit.Controllers.MagbitController;
 import com.example.yehuda_da.magbit.dummy.DummyContent;
 import com.example.yehuda_da.magbit.dummy.DummyContent.DummyItem;
+import com.example.yehuda_da.magbit.models.Charity;
 import com.example.yehuda_da.magbit.models.Magbit;
+import com.example.yehuda_da.magbit.models.Rate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +47,9 @@ public class MaibItitemFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     private List<Magbit> MagbitList;
     RecyclerView recyclerView;
+    private ProgressDialog progressDialog;
+    private int lastFirstVisiblePosition;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -67,14 +75,18 @@ public class MaibItitemFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.content, MabitFragment.newInstance())
-                        .addToBackStack(MabitFragment.class.getSimpleName())
+                        .replace(R.id.content, MabitFragment.newInstance(null))
+                        .addToBackStack(null)
+//                        .addToBackStack(MabitFragment.class.getSimpleName())
                         .commit();
 
                         FloatingActionButton fab =  getActivity().findViewById(R.id.fab);
                         fab.setVisibility(View.INVISIBLE);
+
+
 
             }
         });
@@ -93,6 +105,7 @@ public class MaibItitemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        progressDialog = new ProgressDialog(container.getContext());
 
         View view = inflater.inflate(R.layout.fragment_maibititem_list, container, false);
 
@@ -106,31 +119,78 @@ public class MaibItitemFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
+
+
+            progressDialog.setMessage("Please wait...");
+            progressDialog.show();
+
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("magbits");
 
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    MagbitList  = new ArrayList<>();
+                    if(MagbitList == null) {
+                        MagbitList = new ArrayList<>();
+                    }
+
                     for (DataSnapshot magbitdata: dataSnapshot.getChildren())
                     {
+
                         Magbit magbit = magbitdata.getValue(Magbit.class);
-                        MagbitList.add(magbit);
+
+                        int rateCount = 0;
+                        float avg = 0;
+                        for (DataSnapshot rates:  magbitdata.child("Rates").getChildren())
+                        {
+                            Rate rate = rates.getValue(Rate.class);
+                            avg += rate.getRate();
+                            rateCount++;
+                        }
+
+                        if (rateCount > 0)
+                        {
+                            magbit.setRate_avg(avg / rateCount);
+                        }
+
+                        magbit.setRate_num(rateCount);
+
+                        boolean isExist = false;
+                        for (Magbit magbit1 : MagbitList)
+                        {
+                            if (magbit1.getId() == magbit.getId())
+                            {
+                                magbit1.setRate_num(magbit.getRate_num());
+                                magbit1.setRate_avg(magbit.getRate_avg());
+                                magbit1.setDescription(magbit.getDescription());
+                                magbit1.setName(magbit.getName());
+                                isExist = true;
+                            }
+                        }
+
+                        if (isExist == false) {
+                            MagbitList.add(magbit);
+                        }
+
                     }
 
                     LinearLayoutManager llm = new LinearLayoutManager(getContext());
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerView.setLayoutManager(llm);
                     recyclerView.setAdapter(new MyMaibItitemRecyclerViewAdapter(MagbitList, mListener));
+                    progressDialog.dismiss();
 
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    progressDialog.dismiss();
                 }
             });
+
+
         }
+
+        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(lastFirstVisiblePosition);
 
         return view;
 
@@ -154,6 +214,25 @@ public class MaibItitemFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        lastFirstVisiblePosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        FloatingActionButton fab =  getActivity().findViewById(R.id.fab);
+        if (fab != null) {
+            fab.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+
+    }
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -167,5 +246,7 @@ public class MaibItitemFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Magbit item);
+
     }
+
 }

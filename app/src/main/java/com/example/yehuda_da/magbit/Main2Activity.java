@@ -1,6 +1,9 @@
 package com.example.yehuda_da.magbit;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,27 +19,62 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.yehuda_da.magbit.dummy.DummyContent;
 import com.example.yehuda_da.magbit.models.Magbit;
+import com.example.yehuda_da.magbit.models.charity_item_Fragment;
+import com.example.yehuda_da.magbit.models.magbit_charity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 public class Main2Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, Login_fragment.LoginFragmentListener, MaibItitemFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, Login_fragment.LoginFragmentListener, MaibItitemFragment.OnListFragmentInteractionListener, charity_item_Fragment.OnListFragmentInteractionListener, CharityFragment.OnFragmentInteractionListener{
     private Menu navMenu;
     RecyclerView RecyclerViewMagbir;
     MyMaibItitemRecyclerViewAdapter MagbitAdapter;
 
     public void onListFragmentInteraction(Magbit item)
     {
+        final charity_item_Fragment fragment = new charity_item_Fragment();
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content, charity_item_Fragment.newInstance(item));
+        transaction.addToBackStack(null);
+        transaction.commit();
 
     }
+   public void onListFragmentInteraction(com.example.yehuda_da.magbit.models.dummy.DummyContent.DummyItem item){
+
+   }
+
+    public void onFragmentInteraction(Uri uri)
+    {
+
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }
+        catch (Exception e)
+        {
+
+        }
+
+
+
         setContentView(R.layout.activity_main2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navMenu = navigationView.getMenu();
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -53,15 +91,14 @@ public class Main2Activity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.content, Login_fragment.newInstance())
                     .commit();
+            navMenu
+                    .findItem(R.id.logout)
+                    .setVisible(false);
         } else {
 
             getSupportFragmentManager()
@@ -69,6 +106,9 @@ public class Main2Activity extends AppCompatActivity
                     .replace(R.id.content, MaibItitemFragment.newInstance())
                     .commit();
             showUser(FirebaseAuth.getInstance().getCurrentUser());
+            navMenu
+                    .findItem(R.id.logout)
+                    .setVisible(true);
 
         }
     }
@@ -103,9 +143,9 @@ public class Main2Activity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -116,18 +156,23 @@ public class Main2Activity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+//        if (id == R.id.nav_camera) {
+//            // Handle the camera action
+//        } else if (id == R.id.nav_gallery) {
+//
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.logout) {
+            FirebaseAuth.getInstance().signOut();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content, Login_fragment.newInstance())
+                    .commit();
+            navMenu
+            .findItem(R.id.logout)
+            .setVisible(false);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -138,14 +183,14 @@ public class Main2Activity extends AppCompatActivity
 
     @Override
     public void onLoginSuccess() {
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.content, CharitiesFragment.newInstance())
-//                .commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content, MaibItitemFragment.newInstance())
+                .commit();
         showUser(FirebaseAuth.getInstance().getCurrentUser());
-//        navMenu
-//                .findItem(R.id.nav_log_out)
-//                .setVisible(true);
+        navMenu
+                .findItem(R.id.logout)
+                .setVisible(true);
     }
 
 
@@ -163,7 +208,15 @@ public class Main2Activity extends AppCompatActivity
                 .load(currentUser.getPhotoUrl())
                 .apply(RequestOptions.circleCropTransform())
                 .into(userImage);
+    }
 
+    @Override
+    public void onListFragmentInteraction(magbit_charity item) {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 }

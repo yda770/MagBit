@@ -12,21 +12,26 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.yehuda_da.magbit.Controllers.MagbitController;
+import com.example.yehuda_da.magbit.models.Magbit;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.EventListener;
 
 public class MabitFragment extends Fragment {
 
@@ -39,12 +44,15 @@ public class MabitFragment extends Fragment {
     private Uri imageUri;
     private ProgressBar loader;
     private ImageView new_maigmit_image;
+    private static Magbit mMagbit_edit;
 
     private String currentPhotoPath;
 
     private MabitViewModel mViewModel;
     View MagbitView;
-    public static MabitFragment newInstance() {
+    public static MabitFragment newInstance(Magbit magbit_edit)
+    {
+        mMagbit_edit = magbit_edit;
         return new MabitFragment();
     }
 
@@ -66,14 +74,40 @@ public class MabitFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (mMagbit_edit != null) {
+            TextView MagbitName = view.findViewById(R.id.magbit_name);
+            TextView MagbitDesc = view.findViewById(R.id.magbit_desc);
+            ImageView MagbitImage = view.findViewById(R.id.magbit_image_create);
+
+            MagbitName.setText(mMagbit_edit.getName());
+            MagbitDesc.setText(mMagbit_edit.getDescription());
+            MagbitImage.setImageBitmap(mMagbit_edit.getMy_image());
+
+        }
+
         MagbitView = view;
         new_maigmit_image = view.findViewById(R.id.magbit_image_create);
         FloatingActionButton fab = view.findViewById(R.id.create_magbit);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MagbitController.createMagbit(MagbitView);
+
+                if (mMagbit_edit == null) {
+                    MagbitController.createMagbit(MagbitView);
+                         Snackbar.make(view, "מגבית נוצרה בהצלחה", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                }
+                else
+                {
+                    MagbitController.changeMagbit(mMagbit_edit, MagbitView);
+                    Snackbar.make(view, "מגבית נשמרה בהצלחה", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+                getFragmentManager().popBackStack();
+//                getFragmentManager().popBackStackImmediate();
             }
+
         });
 
 
@@ -158,4 +192,6 @@ public class MabitFragment extends Fragment {
             }
         }
     }
+
+
 }

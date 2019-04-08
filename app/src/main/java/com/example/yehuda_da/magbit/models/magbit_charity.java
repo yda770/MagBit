@@ -1,6 +1,7 @@
 package com.example.yehuda_da.magbit.models;
 
 import com.example.yehuda_da.magbit.Main2Activity;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class magbit_charity {
     private Charity charity;
@@ -46,4 +47,5 @@ public class magbit_charity {
     public void setIs_charity(boolean is_charity) {
         this.is_charity = is_charity;
     }
+
 }

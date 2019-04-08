@@ -51,6 +51,18 @@ public class MagbitController {
 
     }
 
+    public static void changeMagbit(Magbit magbit, View view)
+    {
+        TextView MagbitName = view.findViewById(R.id.magbit_name);
+        TextView MagbitDesc = view.findViewById(R.id.magbit_desc);
+        ImageView MagbitImage = view.findViewById(R.id.magbit_image_create);
+
+        magbit.setName(MagbitName.getText().toString());
+        magbit.setDescription(MagbitDesc.getText().toString());
+        magbit.Change(MagbitImage);
+    }
+
+
     public static List<Magbit> GetMagbitList() {
 
 
