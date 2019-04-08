@@ -67,43 +67,43 @@ public class MyMaibItitemRecyclerViewAdapter extends RecyclerView.Adapter<MyMaib
         holder.mRating.setRating(mValues.get(position).getRate_avg());
         holder.mRateNum.setText("(" + mValues.get(position).getRate_num() + ")");
 
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        final int cacheSize = maxMemory / 8;
-        memoryCache = new LruCache<String, Bitmap>(cacheSize) {
-
-            protected int sizeOf(String key, Bitmap bitmap) {
-                return bitmap.getByteCount() / 1024;
-            }
-        };
+//        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+//        final int cacheSize = maxMemory / 8;
+//        memoryCache = new LruCache<String, Bitmap>(cacheSize) {
+//
+//            protected int sizeOf(String key, Bitmap bitmap) {
+//                return bitmap.getByteCount() / 1024;
+//            }
+//        };
 
         StorageReference mStorageRef;
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mStorageRef = mStorageRef.child("images/" + mValues.get(position).getId() + ".jpg");
 
-        Bitmap cache = getBitmapFromMemCache(mValues.get(position).getId());
+//        Bitmap cache = getBitmapFromMemCache(mValues.get(position).getId());
 
-        if (mValues.get(position).getMy_image() != null)
-        {
-            holder.mMagbitImage.setImageBitmap(mValues.get(position).getMy_image());
-            holder.mMagbitImage.setVisibility(View.VISIBLE);
-            holder.mWheel.setVisibility(View.INVISIBLE);
-            Glide.with(holder.mMagbitImage.getContext())
-                    .load(holder.mMagbitImage.getDrawable())
-                    .apply(RequestOptions.centerCropTransform())
-                    .into(holder.mMagbitImage);
-        }
-        else if(cache != null)
-        {
-            holder.mMagbitImage.setImageBitmap(cache);
-            holder.mMagbitImage.setVisibility(View.VISIBLE);
-            holder.mWheel.setVisibility(View.INVISIBLE);
-
-            Glide.with(holder.mMagbitImage.getContext())
-                .load(holder.mMagbitImage.getDrawable())
-                .apply(RequestOptions.centerCropTransform())
-                .into(holder.mMagbitImage);
-
-        }
+//      if (mValues.get(position).getMy_image() != null)
+//      {
+////          holder.mMagbitImage.setImageBitmap(mValues.get(position).getMy_image());
+//          holder.mMagbitImage.setVisibility(View.VISIBLE);
+//          holder.mWheel.setVisibility(View.INVISIBLE);
+//          Glide.with(holder.mMagbitImage.getContext())
+//                  .load(mValues.get(position).getMy_image())
+//                  .apply(RequestOptions.centerCropTransform())
+//                  .into(holder.mMagbitImage);
+//      }
+////        else if(cache != null)
+//        {
+//            holder.mMagbitImage.setImageBitmap(cache);
+//            holder.mMagbitImage.setVisibility(View.VISIBLE);
+//            holder.mWheel.setVisibility(View.INVISIBLE);
+//
+//            Glide.with(holder.mMagbitImage.getContext())
+//                .load(holder.mMagbitImage.getDrawable())
+//                .apply(RequestOptions.centerCropTransform())
+//                .into(holder.mMagbitImage);
+//
+//        }
 
 
         try {
@@ -113,25 +113,26 @@ public class MyMaibItitemRecyclerViewAdapter extends RecyclerView.Adapter<MyMaib
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     if(holder.mMagbitImage.getContext() != null) {
                         try {
-                            holder.mMagbitImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
-                            Glide.with(holder.mMagbitImage.getContext())
-                                    .load(holder.mMagbitImage.getDrawable())
-                                    .apply(RequestOptions.centerCropTransform())
-                                    .into(holder.mMagbitImage);
 
-                            mValues.get(position).setMy_image(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
-                            holder.mMagbitImage.setVisibility(View.VISIBLE);
-                            holder.mWheel.setVisibility(View.INVISIBLE);
+                            if (mValues.get(position).getMy_image() == null || BitmapFactory.decodeFile(localFile.getAbsolutePath()).getByteCount() != mValues.get(position).getMy_image().getByteCount()) {
+                                holder.mMagbitImage.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+                                Glide.with(holder.mMagbitImage.getContext())
+                                        .load(holder.mMagbitImage.getDrawable())
+                                        .apply(RequestOptions.centerCropTransform())
+                                        .into(holder.mMagbitImage);
 
-                            addBitmapToMemoryCache(mValues.get(position).getId(),mValues.get(position).getMy_image());
+                                mValues.get(position).setMy_image(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
+                                holder.mMagbitImage.setVisibility(View.VISIBLE);
+                                holder.mWheel.setVisibility(View.INVISIBLE);
+                                holder.mMagbitImage.setDrawingCacheEnabled(true);
+                                holder.mMagbitImage.buildDrawingCache();
+                            }
+//                            addBitmapToMemoryCache(mValues.get(position).getId(),mValues.get(position).getMy_image());
                         }
                         catch (Exception e)
                         {
-
                         }
                     }
-
-
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -203,13 +204,40 @@ public class MyMaibItitemRecyclerViewAdapter extends RecyclerView.Adapter<MyMaib
 
     }
 
-    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            memoryCache.put(key, bitmap);
-        }
+    @Override
+    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.mWheel.setVisibility(View.VISIBLE);
+        holder.mMagbitImage.setVisibility(View.INVISIBLE);
     }
 
-    public Bitmap getBitmapFromMemCache(String key) {
-        return memoryCache.get(key);
+    @Override
+    public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+
+        if (holder.mItem.getMy_image() != null)
+      {
+//          holder.mMagbitImage.setImageBitmap(mValues.get(position).getMy_image());
+          holder.mMagbitImage.setVisibility(View.VISIBLE);
+          holder.mWheel.setVisibility(View.INVISIBLE);
+          Glide.with(holder.mMagbitImage.getContext())
+                  .load(holder.mItem.getMy_image())
+                  .apply(RequestOptions.centerCropTransform())
+                  .into(holder.mMagbitImage);
+
+          holder.mWheel.setVisibility(View.INVISIBLE);
+          holder.mMagbitImage.setVisibility(View.VISIBLE);
+      }
+
     }
+
+    //    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+//        if (getBitmapFromMemCache(key) == null) {
+//            memoryCache.put(key, bitmap);
+//        }
+//    }
+
+//    public Bitmap getBitmapFromMemCache(String key) {
+//        return memoryCache.get(key);
+//    }
 }

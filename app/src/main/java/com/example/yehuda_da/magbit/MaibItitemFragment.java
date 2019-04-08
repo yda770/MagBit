@@ -48,7 +48,7 @@ public class MaibItitemFragment extends Fragment {
     private List<Magbit> MagbitList;
     RecyclerView recyclerView;
     private ProgressDialog progressDialog;
-    private int lastFirstVisiblePosition;
+//    private int lastFirstVisiblePosition;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -120,7 +120,6 @@ public class MaibItitemFragment extends Fragment {
             }
 
 
-
             progressDialog.setMessage("Please wait...");
             progressDialog.show();
 
@@ -189,9 +188,6 @@ public class MaibItitemFragment extends Fragment {
 
 
         }
-
-        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(lastFirstVisiblePosition);
-
         return view;
 
 
@@ -218,7 +214,7 @@ public class MaibItitemFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        lastFirstVisiblePosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+//        lastFirstVisiblePosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
         FloatingActionButton fab =  getActivity().findViewById(R.id.fab);
         if (fab != null) {
             fab.setVisibility(View.INVISIBLE);

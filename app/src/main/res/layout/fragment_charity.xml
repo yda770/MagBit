@@ -42,6 +42,7 @@
                 android:fontFamily="casual"
                 android:hint="Amount"
                 android:inputType="number"
+                android:text="0"
                 android:textAlignment="center"
                 android:textColor="@android:color/holo_green_dark"
                 android:textSize="45sp"
@@ -51,7 +52,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.571"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="0" />
 
             <EditText
                 android:id="@+id/honor_text"

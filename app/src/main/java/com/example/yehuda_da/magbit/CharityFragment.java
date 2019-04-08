@@ -11,11 +11,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.TextView;
 
 import com.example.yehuda_da.magbit.Controllers.CharityController;
 import com.example.yehuda_da.magbit.Controllers.MagbitController;
 import com.example.yehuda_da.magbit.models.Magbit;
+
+import javax.xml.transform.Templates;
 
 
 /**
@@ -69,12 +73,20 @@ public class CharityFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CharityController.createCharity(CharityView, mMagbit);
+                EditText edit = (EditText) CharityView.findViewById(R.id.amount);
+                int num = Integer.parseInt(edit.getText().toString());
+                if (num == 0){
+                    Snackbar.make(view, "חובה להזין סכום", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+                else {
+                    CharityController.createCharity(CharityView, mMagbit);
 
-                Snackbar.make(view, "תודה על תרומתך!!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                    Snackbar.make(view, "תודה על תרומתך!!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
 
-                getFragmentManager().popBackStackImmediate();
+                    getFragmentManager().popBackStackImmediate();
+                }
             }
         });
 
